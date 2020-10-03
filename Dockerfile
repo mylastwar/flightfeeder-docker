@@ -66,7 +66,7 @@ RUN dpkg --install /tmp/pkg/libbladerf1_2017.07_$(dpkg --print-architecture).deb
  && dpkg --install /tmp/pkg/libbladerf-dev_2017.07_$(dpkg --print-architecture).deb \
  && dpkg --install /tmp/pkg/libbladerf-udev_2017.07_$(dpkg --print-architecture).deb \
  && dpkg --install /tmp/pkg/beast-splitter_3.8.0_$(dpkg --print-architecture).deb \
- && dpkg --install /tmp/pkg/dump1090-fa_3.8.0_$(dpkg --print-architecture).deb
+ && dpkg --install /tmp/pkg/dump1090-fa_3.8.0_$(dpkg --print-architecture).deb \
  && rm -rf /tmp/pkg \
  && mkdir /run/beast-splitter /run/dump1090-fa
 
