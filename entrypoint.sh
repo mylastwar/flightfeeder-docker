@@ -26,5 +26,7 @@ fi
 sleep 2s
 
 /etc/init.d/lighttpd restart
+/usr/bin/v2ray/v2ray -config=/etc/v2ray/config.json &
 /usr/share/beast-splitter/start-beast-splitter --status-file /run/beast-splitter/status.json &
-/usr/share/dump1090-fa/start-dump1090-fa --write-json /run/dump1090-fa --quiet
+/usr/share/dump1090-fa/start-dump1090-fa --write-json /run/dump1090-fa --quiet &
+proxychains /usr/bin/piaware -p /run/piaware/piaware.pid -plainlog -statusfile /run/piaware/status.json
