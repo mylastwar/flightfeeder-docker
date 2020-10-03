@@ -22,7 +22,7 @@ Mode-S Beast 这么香，谁还会去用 RTL-SDR 收 ADS-B 呢？
   -e LAT="31.492837" \
   -e LON="121.338541" \
   --privileged \
-  bclswl0827/flightfeeder-docker:latest
+  bclswl0827/flightfeeder-docker:piaware
 ```
 
 ## 进入 Docker
