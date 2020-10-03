@@ -18,6 +18,7 @@ Mode-S Beast 这么香，谁还会去用 RTL-SDR 收 ADS-B 呢？
   --restart always \
   -p 8000:80 \
   -p 30005:30005 \
+  -v v2ray:/etc/v2ray \
   -e LAT="31.492837" \
   -e LON="121.338541" \
   --privileged \
