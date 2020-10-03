@@ -54,7 +54,11 @@ RUN sed -i "s/deb.debian.org/mirrors.bfsu.edu.cn/g" /etc/apt/sources.list \
                               libboost-system-dev \
                               libusb-1.0-0-dev \
                               librtlsdr-dev \
-                              udev
+                              udev \
+                              curl \
+                              proxychains \
+                              unzip \
+ && sed -e "s/socks4/socks5/g" -e "s/9050/1080/g" -i /etc/proxychains.conf
 
 COPY --from=builder /tmp/src /tmp/pkg
 
@@ -62,11 +66,26 @@ RUN dpkg --install /tmp/pkg/libbladerf1_2017.07_$(dpkg --print-architecture).deb
  && dpkg --install /tmp/pkg/libbladerf-dev_2017.07_$(dpkg --print-architecture).deb \
  && dpkg --install /tmp/pkg/libbladerf-udev_2017.07_$(dpkg --print-architecture).deb \
  && dpkg --install /tmp/pkg/beast-splitter_3.8.0_$(dpkg --print-architecture).deb \
- && dpkg --install /tmp/pkg/dump1090-fa_3.8.0_$(dpkg --print-architecture).deb \
+ && dpkg --install /tmp/pkg/dump1090-fa_3.8.0_$(dpkg --print-architecture).deb
  && rm -rf /tmp/pkg \
- && apt-get clean \
  && mkdir /run/beast-splitter /run/dump1090-fa
 
+RUN mkdir -p /usr/bin/v2ray /etc/v2ray /run/piaware /tmp/pkgs \
+ && curl -L --insecure --retry 10 --connect-timeout 5 -o /tmp/pkgs/piaware-repo.deb https://flightaware.com/adsb/piaware/files/packages/pool/piaware/p/piaware-support/piaware-repository_4.0_all.deb \
+ && curl -L --insecure --retry 10 --connect-timeout 5 --resolve raw.githubusercontent.com:443:151.101.88.133 -o /tmp/pkgs/v2ray.zip https://raw.githubusercontent.com/v2ray/dist/master/v2ray-linux-arm32-v7a.zip \
+ && dpkg -i /tmp/pkgs/piaware-repo.deb \
+ && unzip /tmp/pkgs/v2ray.zip "v2ray" -d /usr/bin/v2ray \
+ && unzip /tmp/pkgs/v2ray.zip "v2ctl" -d /usr/bin/v2ray \
+ && unzip /tmp/pkgs/v2ray.zip "geoip.dat" -d /usr/bin/v2ray \
+ && chmod -R 777 /usr/bin/v2ray \
+ && rm -rf /tmp/pkgs \
+ && apt-get update \
+ && apt-get install -y piaware \
+ && apt-get remove --purge -y unzip curl \
+ && apt-get autoremove -y \
+ && apt-get clean
+
+ADD config.json /etc/v2ray/config.json
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["sh", "-c", "/entrypoint.sh"]
